@@ -21,7 +21,7 @@ emailextensions = ('emails.zip','.eml')
 
 def writeHeader():
   with open("dateien.csv", "w") as f:
-    f.write("filename;filepath;size;checksum;width;height;entropy;artist;album;creator\n")
+    f.write("filename;filepath;size;checksum;width;height;entropy;artist;album;title;creator\n")
 
 def writeFileInfos(evidence):
   csvstring = evidence.filename+';'+evidence.filepath+';'+str(evidence.size)+';'+evidence.checksum+';'
@@ -29,7 +29,7 @@ def writeFileInfos(evidence):
   if type(evidence).__name__ == 'Picture':
     csvstring += str(evidence.width)+';'+str(evidence.height)+';'+str(evidence.entropy)+';\n'
   elif type(evidence).__name__ == 'Audio':
-    csvstring += ';;;'+evidence.artist+';'+evidence.album+';\n'
+    csvstring += ';;;'+evidence.artist+';'+evidence.album+';'+evidence.title+';\n'
   elif type(evidence).__name__ == 'Document':
     csvstring += ';;;;;'+evidence.creator+';\n'
   elif type(evidence).__name__ == 'Video':
