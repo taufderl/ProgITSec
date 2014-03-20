@@ -1,0 +1,7 @@
+user password
+admin 1234
+admin password
+admin admin
+admin 0000
+ftp password
+anonymous no_password
