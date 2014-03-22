@@ -1,26 +1,50 @@
 #!/usr/bin/env python
 # this is a python 2.x file due to pdfminer dependency
-import sys
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import getopt
 import mmap
 from uebung4_1.pdf_to_text import PDF2Text
-from StringIO import StringIO
 
-def searchPDF(filename, keyword):
-  text = StringIO()
+class SearchPDF:
   
-  converter = PDF2Text()
-  converter.convertPDF(filename, text)
-  print(text)
-  
-  
-  # start search
-  with open(output_filename, "r+b") as f:
-    mm = mmap.mmap(f.fileno(), 0)
-    result = mm.find(keyword)
-  
-  print(result)
+  def __init__(self, input_file):
+    self.input_file = input_file
+    
+  def searchPDF(self, temp_file, keyword):
+    output = open(temp_file, 'w')
+    converter = PDF2Text()
+    converter.convertPDF(self.input_file, output)
+    output.close()
+    
+    # start search
+    with open(temp_file, "r+b") as f:
+      mm = mmap.mmap(f.fileno(), 0)
       
+      # find first occurence
+      result = mm.find(keyword)
+      while (result > 0):
+        #print("Found \'%s\' in [%s] at position %i"%(keyword, input_file, result))
+        
+        # find beginning of line and print the whole line
+        linestart = mm.rfind('\n', 0, result)
+        mm.seek(linestart+1)
+        
+        line = self.__get_line_number(mm, result)
+        
+        # find line number
+        print("Line %i: %s"%(line, mm.readline().strip()))
+        
+        # find next occurence
+        result = mm.find(keyword, result+1)
+        
+  def __get_line_number(self, mm, index, current_line = 1):
+    new_index = mm.rfind('\n', 0, index)
+    if new_index == -1:
+      return current_line;
+    else:
+      return self.__get_line_number(mm, new_index, current_line+1)
+    
 def usage():
   print("\n pdf_to_text.py by Tim auf der Landwehr")
   print('')
@@ -45,14 +69,11 @@ def main():
 
   # defaults
   input_file = ''
-  output_file = 'out.txt'
   keyword = ''
 
   for o,v in opts:
     if o in ['--in']:
       input_file = v
-    elif o in ['--out']:
-      output_file = v
     elif o in ['--search']:
       keyword = v
     elif o in ['-h','--help']:
@@ -65,9 +86,14 @@ def main():
   if input_file == '':
       print('Please specify an input file.')
       sys.exit(1)
+  if keyword == '':
+      print('Please specify a keyword.')
+      sys.exit(1)
   else:
-    searchPDF(input_file, output_file, keyword)
-
+    temp_file = "out.txt.tmp"
+    searchPDF = SearchPDF(input_file)
+    searchPDF.searchPDF(temp_file, keyword)
+    os.remove(temp_file)
       
 if __name__ == "__main__":
   main()

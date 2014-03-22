@@ -1,8 +1,0 @@
-This is very small pdf file example!
-
-Here comes some 
-bigger text.
-
-And here some very small.
-
-
