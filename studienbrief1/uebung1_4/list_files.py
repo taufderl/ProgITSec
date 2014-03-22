@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-from übung1_4.File import File
-from übung1_4.Document import Document
-from übung1_4.Audio import Audio 
-from übung1_4.Picture import Picture 
-from übung1_4.Video import Video
-from übung1_4.Archive import Archive
-from übung1_4.Email import Email
+from uebung1_4.File import File
+from uebung1_4.Document import Document
+from uebung1_4.Audio import Audio 
+from uebung1_4.Picture import Picture 
+from uebung1_4.Video import Video
+from uebung1_4.Archive import Archive
+from uebung1_4.Email import Email
 #from übung1_4.Folder import Folder
 import os
 

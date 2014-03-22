@@ -1,4 +1,4 @@
-from übung1_4.File import File
+from uebung1_4.File import File
 from pytag import Audio as PyTagAudio
 import os
 
