@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+#
+#  sql_injection.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This file was supposed to show an example of an sql injection
+#  in python. But cursor.execute(QUERY) only executes one query,
+#  to protect from this issue. Therefore an sql injection cannot
+#  be shown.
+#
 import sqlite3
 import sys
 
@@ -23,7 +33,7 @@ def main():
   query = "INSERT INTO users (name) VALUES ('%s');"% name
   print(query)
   cursor.execute(query)        # -> actually execute() only allows a single query
-  #cursor.executescript(query) # -> to show an SQL injection executescript() needs to be used
+  #cursor.executescript(query) # -> to show an SQL injection executescript() would be required
   
   # retrieve list of users
   # if successfully deleted by injection this will throw an exception 
@@ -33,7 +43,7 @@ def main():
   for i, user in enumerate(result):
     print("\t%i: %s"%(i,user[0]))
   
-  
+  # commit and close connection
   conn.commit()
   conn.close()
 

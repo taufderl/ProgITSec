@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-from übung1_4.File import File
-from übung1_4.Document import Document
-from übung1_4.Audio import Audio 
-from übung1_4.Picture import Picture 
-from übung1_4.Video import Video
-from übung1_4.Archive import Archive
-from übung1_4.Email import Email
-
+#
+#  list_files_in_db.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This script collects all files in a certain folder
+#  and writes their metadata into an sqlite3 database file.
+#
+from uebung1_4.File import File
+from uebung1_4.Document import Document
+from uebung1_4.Audio import Audio 
+from uebung1_4.Picture import Picture 
+from uebung1_4.Video import Video
+from uebung1_4.Archive import Archive
+from uebung1_4.Email import Email
 import os
 import sqlite3
 
-directory = '/home/tadl/Pictures'
+# the directory to be scanned
+directory = '/home/tadl'
 
+# the filextensions to be distinguished
 pictureextensions = ('.jpg','.png','.raw','.gif','.jpeg','.bmp','.tif')
 audioextensions = ('.mp3','.wma','.ogg','.wav','.aac','.m4a','.flac','.aif','.aiff','.aifc','.aifr','.midi','.mid','.rmi','.mp2')
 documentextensions = ('.doc','.xls','.ppt','.odt','.ods','.pdf','.docx','.xlsx','.pptx','.odc')
@@ -20,6 +28,7 @@ videoextensions = ('.avi','.mov','.mpg','.mp4','.flv','.wmv','.mpg','.mpeg','.mp
 compressedextensions = ('.zip','.rar','.7z','.ace','.arj','.cab','tar.gz')
 emailextensions = ('emails.zip','.eml')
 
+# creates the table for the files in the database
 def createTable(cursor):
   query = "CREATE TABLE IF NOT EXISTS files ("+ \
                   "filename text, "+ \
@@ -36,38 +45,25 @@ def createTable(cursor):
                   ");"
   cursor.execute(query)
   
-  
- 
 def insertFileInfos(cursor, evidence):
-  
-  #values = {}
-  
-  #values['filename'] = evidence.filename
-  #values['filepath'] = evidence.filepath
-  #values['size'] = evidence.size
-  #values['checksum'] = evidence.checksum
-  
+  # add general file information
   column_names = 'filename, filepath, size, checksum'
   values = "'%s', '%s', %i, '%s'"% (evidence.filename, evidence.filepath, evidence.size, evidence.checksum)
   
   if type(evidence).__name__ == 'Picture':
+    # add picture specific file information
     column_names += ', width, height, entropy'
     values += ", %i, %i, %s"% (evidence.width, evidence.height, evidence.entropy)
-    #values['width'] = evidence.width
-    #values['height'] = evidence.height
-    #values['entropy'] = evidence.entropy
     
   elif type(evidence).__name__ == 'Audio':
+    # add audio specific file information
     column_names += ', artist, album, title'
     values += ", '%s', '%s', '%s'"% (evidence.artist, evidence.album, evidence.title)
-    #values['artist'] = evidence.artist
-    #values['album'] = evidence.album
-    #values['title'] = evidence.title
     
   elif type(evidence).__name__ == 'Document':
+    # add document specific file information
     column_names += ', creator'
     values += ", %s"% (evidence.creator)
-    #values['creator'] = evidence.creator
     
   elif type(evidence).__name__ == 'Video':
     pass # add nothing
@@ -78,18 +74,12 @@ def insertFileInfos(cursor, evidence):
   else:
     pass # add nothing
   
+  # prepare values to be added to the database query
   values = values.split(', ')
   values = tuple(values)
-  print(values)
-  print(type(values))
-  print(len(values))
-  
-  #query = "INSERT INTO files (%s) VALUES (%s);"%(column_names, values)
+  # generate query
   query = ("INSERT INTO files ({}) VALUES ("+(', '.join('?'*len(values)))+");").format(column_names)
-  print(query)
-  print(column_names)
-  
-
+  # execute query to insert file data
   cursor.execute(query, values)
 
 def main():

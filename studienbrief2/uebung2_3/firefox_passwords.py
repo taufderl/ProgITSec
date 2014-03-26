@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+#
+#  firefox_passwords.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This script can be used to analyze the firefox user databases.
+#
 import sqlite3
 import zipfile
 import os
@@ -91,6 +98,7 @@ def printGoogle(placesDB):
 #########################  passsword extraction  ##############################
 ###############################################################################
 
+# prints all stored password data
 def printPasswords(passwordDB):
   try:
     conn = sqlite3.connect(passwordDB)
@@ -120,45 +128,53 @@ def printPasswords(passwordDB):
     if 'encrypted' in str(e):
       print('\n[*] Error reading the database')
 
+
+###############################################################################
+#############################  zip a profile  #################################
+###############################################################################
+def zip_profile(profile_path, firefoxprofile):
+  zip_file_name = firefoxprofile+'.zip'
+  print('Writing zipfile to %s'%zip_file_name)
+  zip_file = zipfile.ZipFile(zip_file_name, 'w', zipfile.ZIP_DEFLATED)
+  rootlen = len(profile_path) + 1
+  for base, dirs, files in os.walk(profile_path):
+    for file in files:
+      fn = os.path.join(base, file)
+      zip_file.write(fn, fn[rootlen:])
+
 ###############################################################################
 ##################################  main  #####################################
 ###############################################################################
 def main():
   # Windows
   #firefoxfolder = os.environ['appdata'] + os.sep + 'Mozilla'+os.sep+'Firefox'+os.sep+'Profiles'
-  # Linux
-  firefoxfolder = os.path.expanduser('~') + os.sep+'.mozilla/firefox'
-  # in respsitory
-  # firefoxfolder = '../firefox'
+  # in repository
+  firefoxfolder = '../firefox'
 
   try:
     firefoxprofiles = os.listdir(firefoxfolder)
     
+    # analyze each profile found
     for firefoxprofile in firefoxprofiles:
       profile_path = firefoxfolder+os.sep+firefoxprofile
       
+      # only folders are profiles, ignore Crash Reports folder
       if os.path.isdir(profile_path) and not firefoxprofile == 'Crash Reports':
         #printForm(profile_path+os.sep+'formhistory.sqlite')
         #printCookies(profile_path+os.sep+'cookies.sqlite')
         #printHistory(profile_path+os.sep+'places.sqlite')
         #printGoogle(profile_path+os.sep+'places.sqlite')
+        
+        # print stored password data
         printPasswords(profile_path+os.sep+'signons.sqlite')
         
         # zip profile
-        zip_file_name = firefoxprofile+'.zip'
-        print('Writing zipfile to %s'%zip_file_name)
-        zip_file = zipfile.ZipFile(zip_file_name, 'w', zipfile.ZIP_DEFLATED)
-        rootlen = len(profile_path) + 1
-        for base, dirs, files in os.walk(profile_path):
-          for file in files:
-            fn = os.path.join(base, file)
-            zip_file.write(fn, fn[rootlen:])
+        zip_profile(profile_path, firefoxprofile)
 
   except Exception:
     print('Das Verzeichnis '+firefoxfolder+' ist nicht vorhanden.')      
 
 
-      
 if __name__ == "__main__":
   main()
   

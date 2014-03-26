@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-#  Folder.py
+#  list_files.py
 #
 #  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
 #
@@ -14,7 +14,6 @@ from uebung1_4.Picture import Picture
 from uebung1_4.Video import Video
 from uebung1_4.Archive import Archive
 from uebung1_4.Email import Email
-#from übung1_4.Folder import Folder
 import os
 
 # the directory to be scanned
