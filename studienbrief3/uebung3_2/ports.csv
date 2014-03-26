@@ -1,3 +1,0 @@
-protocol;port;state;name;program;version
-TCP;25;open;smtp;Sendmail;8.14.8/8.14.8
-TCP;80;open;http;Apache httpd;2.4.7

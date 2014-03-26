@@ -1,9 +1,17 @@
 #!/usr/bin/env python
-# since nmap is not available for python3 this is an python2.7 file
+# since nmap is not available for python3 this is an python2.x file
+#
+#  udp_portscanner.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This script provides an udp portscanner.
+#
 import sys
 import nmap
 import getopt
 
+# usage
 def usage():
   print("\n udp_portscanner.py by Tim auf der Landwehr")
   print('')
@@ -21,7 +29,7 @@ def usage():
   print(' -h --help')
   print(' \tShow this information')
 
-
+# main
 def main():
   try:
     opts, args = getopt.gnu_getopt(sys.argv[1:],"ho:v",["help", "host=", "range=", "out=", "tcp"])
@@ -36,6 +44,7 @@ def main():
   udp = True
   tcp = False
   
+  # get parameters
   for o,v in opts:
     if o in ['--host']:
       hostname = v
@@ -52,12 +61,15 @@ def main():
       print('unknown parameter %s'%o)
       sys.exit(1)
 
+  # write headers to csv file
   with open(outfile, 'w') as csv_file:
     csv_file.write('protocol;port;state;name;program;version\n')
-    
+  
+  # run nmap scanner
   nm = nmap.PortScanner()
   nm.scan(hostname, port_range)
   
+  # write results to file
   with open(outfile, 'a') as csv_file:
     if udp:
       for port in nm[hostname].all_udp():
@@ -83,7 +95,6 @@ def main():
         csv_file.write(csv_string)
     
   print("Wrote open ports to %s."%outfile)
-  
-      
+    
 if __name__ == "__main__":
   main()
