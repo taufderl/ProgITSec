@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+#
+#  Audio.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This class represents an Audio file
+#
 from uebung1_4.File import File
 from pytag import Audio as PyTagAudio
 import os

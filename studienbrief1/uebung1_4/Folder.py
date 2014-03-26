@@ -1,6 +1,13 @@
-from uebung1_4.File import File
-
-class Folder(File):
-  def __init__(self, filename, filepath):
-    super(Folder, self).__init__(self, filename, filepath)  
+#!/usr/bin/env python3
+#
+#  Folder.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This class represents a Folder
+#
+class Folder:
+  def __init__(self, name, path):
+    self.name = name
+    self.path = path  
 

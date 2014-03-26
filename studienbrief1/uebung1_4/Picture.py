@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+#
+#  Picture.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This class represents a Picture file
+#
 from uebung1_4.File import File
 from PIL import Image
 import math

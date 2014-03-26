@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+#
+#  File.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This class represents a File in general
+#
 import os
 import hashlib
 import shutil

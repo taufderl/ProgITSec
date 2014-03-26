@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+#
+#  Folder.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This script collects all files in a certain folder
+#  and writes their metadata into an csv output file.
+#
 from uebung1_4.File import File
 from uebung1_4.Document import Document
 from uebung1_4.Audio import Audio 
@@ -9,8 +17,10 @@ from uebung1_4.Email import Email
 #from übung1_4.Folder import Folder
 import os
 
-directory = '/home/tadl/Pictures'
+# the directory to be scanned
+directory = '/home/tadl'
 
+# the filextensions to be distinguished
 pictureextensions = ('.jpg','.png','.raw','.gif','.jpeg','.bmp','.tif')
 audioextensions = ('.mp3','.wma','.ogg','.wav','.aac','.m4a','.flac','.aif','.aiff','.aifc','.aifr','.midi','.mid','.rmi','.mp2')
 documentextensions = ('.doc','.xls','.ppt','.odt','.ods','.pdf','.docx','.xlsx','.pptx','.odc')
@@ -18,10 +28,12 @@ videoextensions = ('.avi','.mov','.mpg','.mp4','.flv','.wmv','.mpg','.mpeg','.mp
 compressedextensions = ('.zip','.rar','.7z','.ace','.arj','.cab','tar.gz')
 emailextensions = ('emails.zip','.eml')
 
+# writes the header line to the output file
 def writeHeader():
   with open("dateien.csv", "w") as f:
     f.write("filename;filepath;size;checksum;width;height;entropy;artist;album;title;creator\n")
 
+# writes the line for the given file to the output file
 def writeFileInfos(evidence):
   csvstring = evidence.filename+';'+evidence.filepath+';'+str(evidence.size)+';'+evidence.checksum+';'
 
@@ -43,10 +55,15 @@ def writeFileInfos(evidence):
   with open("dateien.csv", "a") as f:
     f.write(csvstring)
 
+# main
 def main():
+  # write the header line
   writeHeader()
 
+  # scan the given directory
   for root, dirs, files in os.walk(directory):
+    # for each file found create a file object
+    # based on the given file extension
     for file in files:
       print(">> %s"% root+os.sep+file)
       if os.path.isdir(root+os.sep+file):
@@ -66,9 +83,8 @@ def main():
       else:
         evidence = File(file, root)
       
+      # write infos for the file in the output file
       writeFileInfos(evidence)
       
 if __name__ == "__main__":
   main()
-
-
