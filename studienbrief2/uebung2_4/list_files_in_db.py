@@ -6,7 +6,11 @@
 #
 #  This script collects all files in a certain folder
 #  and writes their metadata into an sqlite3 database file.
-#
+import os
+import sys
+import sqlite3
+# make sure uebung 1_4 is in the PYTHONPATH
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../studienbrief1'))
 from uebung1_4.File import File
 from uebung1_4.Document import Document
 from uebung1_4.Audio import Audio 
@@ -14,8 +18,6 @@ from uebung1_4.Picture import Picture
 from uebung1_4.Video import Video
 from uebung1_4.Archive import Archive
 from uebung1_4.Email import Email
-import os
-import sqlite3
 
 # the directory to be scanned
 directory = '/home/tadl'

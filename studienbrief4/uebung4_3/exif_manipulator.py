@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+#
+#  pdf_search.py
+#
+#  Copyright 2014 Tim auf der Landwehr <dev@taufderl.de>
+#
+#  This script provides a search in the text on a pdf file.
+#
 import urllib.request
 import argparse
 from urllib.parse import urlsplit
@@ -8,20 +15,22 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 import os
 
-
-
+# exif manipulator class
 class ExifManipulator:
   
+  # init
   def __init__(self):
     pass
   
+  # find image tags on a given url
   def findImages(self, url):
     print('[+] Finding images on ' + url)
     urlContent= urllib.request.urlopen(url).read()
     soup = BeautifulSoup(urlContent)
     imgTags = soup.findAll('img')
     return imgTags
-  
+
+  # download an image from a given html image tag 
   def downloadImage(self, imgTag):
     try:
       print('[+] Dowloading image...')
@@ -36,6 +45,7 @@ class ExifManipulator:
     except Exception as err:
       return 'Error: %s'%err
   
+  # print exif data to stdout
   def showExifData(self, imgFileName):
     try:
       imgFile = Image.open(imgFileName)
@@ -66,19 +76,21 @@ class ExifManipulator:
     imgFile = Image.open(imgFileName)
     imgFile.save(output_file_name) # ignores exif data
       
-    
+# main    
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('-u', dest='url', type=str,
       help='specify url address', required=True)
   
+  # create instance of manipulator
   em = ExifManipulator()
   args = parser.parse_args()
   imgTags = em.findImages(args.url)
   
-  for imgTag in imgTags[0:1]:
+  for imgTag in imgTags:
+    # download image to file
     imgFileName = em.downloadImage(imgTag)
-    print(imgFileName)
+
     #em.showExifData(imgFileName)
     #em.modidyExifData(imgFileName, 'date', 'today', imgFileName[:-4]+'_manipulaed_date.jpg')
     #em.removeAllExifData(imgFileName, imgFileName[:-4]+'_without_exif.jpg')
